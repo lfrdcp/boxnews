@@ -37,12 +37,12 @@ export const mixinAlert = {
     alertState: false,
   }),
   methods: {
-    setAlert(icon, text, color) {
+    setAlert(icon, text, color, time = 5000) {
       this.alertIcon = icon;
       this.alertText = text;
       this.alertColor = color;
       this.alertState = true;
-      setTimeout(() => (this.alertState = false), 5000);
+      setTimeout(() => (this.alertState = false), time);
     },
   },
 };

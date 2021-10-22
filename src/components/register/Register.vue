@@ -69,7 +69,7 @@
               v-model="user.verifierCode"
             /> -->
 
-            <!-- <v-text-field
+            <v-text-field
               label="Contraseña"
               name="password"
               :prepend-icon="icons.password"
@@ -95,7 +95,7 @@
               :type="showConfirmPassword ? 'text' : 'password'"
               :append-icon="showConfirmPassword ? icons.eyeOn : icons.eyeOff"
               @click:append="showConfirmPassword = !showConfirmPassword"
-            /> -->
+            />
           </v-form>
 
           <ProgressLinear v-bind:loading="registerLoading" color="primary" />
@@ -132,7 +132,7 @@ import { rules } from '../../utils/components/rules'
 import { icons } from '../../data/icons'
 import axios from 'axios'
 import { URL } from '../../data/url'
-import { convertObjectErrors } from '../../utils/convertObjectErrors'
+//import { convertObjectErrors } from '../../utils/convertObjectErrors'
 import { errorUser } from '../../data/errors'
 import { mixinAlert } from '../../mixins/mixins.js'
 
@@ -142,6 +142,9 @@ export default {
     Alert: () => import('../alert/Alert'),
     ProgressLinear: () => import('../progressLinear/ProgressLinear'),
     CardTransparent: () => import('../cardDark/CardTransparent'),
+  },
+  mounted(){
+    this.setAlert(this.icons.warning, errorUser.reg404, 'orange', 10000)
   },
   mixins: [mixinAlert],
   data: () => ({
@@ -175,10 +178,13 @@ export default {
 
   methods: {
     async register() {
+      alert('xd')
       this.registerLoading = true
+      
       try {
-        let response = await axios.post(URL + 'api/user/register', this.user)
-        if (response.data.status === 'c8usu0') {
+        let response = await axios.post(URL + '/api/registeruser', this.user)
+        alert(JSON.stringify(response.data) )
+        /* if (response.data.status === 'c8usu0') {
           this.$store.dispatch('user/setUpRegisterSuccessMsg')
           this.$router.push('/login')
         } else if (response.data.status === '1F4usu0') {
@@ -187,15 +193,16 @@ export default {
         } else if (response.data.errors) {
           let errors = convertObjectErrors(response.data.errors)
           this.setAlert(this.icons.warning, errors, 'orange')
-        }
+        } */
       } catch (error) {
-        if (error.response.status === 404) {
+        alert(JSON.stringify(error) )
+        /* if (error.response.status === 404) {
           this.setAlert(this.icons.warning, errorUser.reg404, 'orange')
         } else if (error.response.status === 500) {
           this.setAlert(this.icons.warning, errorUser.reg500, 'orange')
         } else {
           this.setAlert(this.icons.warning, errorUser.regUn, 'orange')
-        }
+        } */
       } finally {
         this.registerLoading = false
       }
