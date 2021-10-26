@@ -21,28 +21,65 @@
                 v-if="alertState"
               />
             </v-container>
+
             <v-text-field
-              label="Nombre"
-              name="name"
+              label="Nickname"
+              name="nickname"
               :prepend-icon="icons.person"
               type="text"
               outlined
               color="primary"
               required
               :rules="emptyRules"
-              v-model="user.name"
+              v-model="user.nickname"
             />
 
             <v-text-field
-              label="Apellido"
-              name="lastName"
+              label="Nombre"
+              name="nombre"
               :prepend-icon="icons.person"
               type="text"
               outlined
               color="primary"
               required
               :rules="emptyRules"
-              v-model="user.lastName"
+              v-model="user.nombre"
+            />
+
+            <v-text-field
+              label="Apellido paterno"
+              name="app"
+              :prepend-icon="icons.person"
+              type="text"
+              outlined
+              color="primary"
+              required
+              :rules="emptyRules"
+              v-model="user.app"
+            />
+
+            <v-text-field
+              label="Apellido materno"
+              name="app"
+              :prepend-icon="icons.person"
+              type="text"
+              outlined
+              color="primary"
+              required
+              :rules="emptyRules"
+              v-model="user.apm"
+            />
+
+            <v-text-field
+              label="Fecha de nacimiento"
+              name="fechaNac"
+              :prepend-icon="icons.calendar_today"
+              type="date"
+              outlined
+              color="primary"
+              required
+              :rules="emptyRules"
+              v-model="user.fechaNac"
             />
 
             <v-text-field
@@ -108,7 +145,7 @@
             type="submit"
             @click="register"
             :disabled="!valid"
-            >Registarse
+            >Registrarse
           </v-btn>
         </v-card-actions>
         <v-card-actions>
@@ -151,11 +188,16 @@ export default {
     showPassword: false,
     showConfirmPassword: false,
     user: {
-      name: '',
-      lastName: '',
-      verifierCode: '',
+      _token: '',
+      nickname: '',
+      nombre: '',
+      app: '',
+      apm: '',
+      type: '1',
+      fechaNac: '',
       email: '',
       password: '',
+      foto_perfil: '',
       confirmPassword: '',
     },
     icons: icons,
@@ -177,7 +219,12 @@ export default {
     async register() {
       this.registerLoading = true
       try {
+<<<<<<< Updated upstream
         let response = await axios.post(URL + 'api/user/register', this.user)
+=======
+        let response = await axios.post(URL + '/api/registeruser', this.user)
+        //alert(JSON.stringify(response.data) )
+>>>>>>> Stashed changes
         if (response.data.status === 'c8usu0') {
           this.$store.dispatch('user/setUpRegisterSuccessMsg')
           this.$router.push('/login')
@@ -189,6 +236,10 @@ export default {
           this.setAlert(this.icons.warning, errors, 'orange')
         }
       } catch (error) {
+<<<<<<< Updated upstream
+=======
+        //alert(JSON.stringify(error) )
+>>>>>>> Stashed changes
         if (error.response.status === 404) {
           this.setAlert(this.icons.warning, errorUser.reg404, 'orange')
         } else if (error.response.status === 500) {

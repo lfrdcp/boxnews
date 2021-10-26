@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" xs="12" sm="6" md="4" lg="3">
-      <CardTransparent :title="loginText.title" :subtitle="loginText.subtitle">
+      <CardTransparent :title="resetPasswordText.title" :subtitle="resetPasswordText.subtitle">
         <v-card-text>
           <v-img
             :src="require(`../../assets/boxnews.gif`)"
@@ -21,7 +21,7 @@
             <v-text-field
               label="Correo "
               v-model="user.email"
-              name="email"
+              name="login"
               :prepend-icon="icons.person"
               type="email"
               outlined
@@ -31,22 +31,20 @@
             />
 
             <v-text-field
-              label="Contraseña"
+              label="Código"
               v-model="user.password"
               color="primary"
-              name="password"
+              name="number"
               outlined
               required
               :rules="passwordRules"
-              :prepend-icon="icons.password"
-              :type="showPassword ? 'text' : 'password'"
-              :append-icon="showPassword ? icons.eyeOn : icons.eyeOff"
-              @click:append="showPassword = !showPassword"
-              @keyup.enter="valid ? login() : false"
+              :prepend-icon="icons.key"
+              
+              
             />
           </v-form>
 
-          <ProgressLinear v-bind:loading="loginLoading" color="primary" />
+          <ProgressLinear v-bind:loading="resetPassLoading" color="primary" />
         </v-card-text>
 
         <v-card-actions>
@@ -57,9 +55,9 @@
             }"
             block
             type="submit"
-            @click="login"
+            @click="resetpassword"
             :disabled="!valid"
-            >Iniciar sesion
+            >Recuperar contraseña
           </v-btn>
         </v-card-actions>
         <v-divider />
@@ -68,12 +66,12 @@
           <v-col cols="12" sm="6" md="6">
             <v-btn
               text
-              to="resetpassword"
+              to="login"
               color="white"
               block
               :x-small="$vuetify.breakpoint.mobile"
             >
-              ¿Olvidaste tu contraseña?
+              ¿Con cuenta? Iniciar sesión
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -100,7 +98,7 @@ import axios from 'axios'
 import router from '../../router/index'
 import { URL } from '../../data/url'
 import { errorUser } from '../../data/errors'
-import { loginText } from '../../data/viewText'
+import { resetPasswordText } from '../../data/viewText'
 import { mixinAlert } from '../../mixins/mixins.js'
 
 export default {
@@ -113,29 +111,28 @@ export default {
   },
   mixins: [mixinAlert],
   data: () => ({
-    loginLoading: false,
+    resetPassLoading: false,
     valid: true,
-    showPassword: false,
     passwordRules: [rules.minimumEight],
     emailRules: [rules.empty, rules.email],
     icons: icons,
-    loginText: loginText,
+    resetPasswordText: resetPasswordText,
     user: {
       email: '',
-      password: '',
+      code: '',
     },
   }),
   computed: {
     ...mapState('user', ['registerSuccessMsg']),
   },
   methods: {
-    async login() {
-      this.loginLoading = true
+    async resetpassword() {
+      this.resetPassLoading = true
       try {
-        let response = await axios.post(URL + '/api/login', this.user)
-        if (response.data.token) {
-          localStorage.setItem('QpKWqBXI', response.data.token)
-          //localStorage.setItem('type_user', response.data.user.type)
+        let response = await axios.post(URL + 'api/reset-password', this.user)
+        if (response.data.access_token) {
+          localStorage.setItem('QpKWqBXI', response.data.access_token)
+          localStorage.setItem('type_user', response.data.user.type)
           router.push('/dashboard')
         } else {
           this.setAlert(this.icons.warning, response.data.message, 'warning')
@@ -149,7 +146,7 @@ export default {
           this.setAlert(this.icons.warning, errorUser.loginUn, 'error')
         }
       } finally {
-        this.loginLoading = false
+        this.resetPassLoading = false
       }
     },
   },

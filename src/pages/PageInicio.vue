@@ -39,7 +39,7 @@ export default {
   async beforeRouteEnter(to, from, next) {
     if (localStorage.getItem('QpKWqBXI') !== null) {
       try {
-        await axios.get(URL + 'api/user/vtoken');
+        await axios.post(URL + '/api/user');
         console.log('token correcto');
         next();
       } catch (error) {
