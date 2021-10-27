@@ -57,19 +57,7 @@
               v-model="user.email"
             />
 
-            <!-- <v-text-field
-              label="Código para caja"
-              name="code"
-              :prepend-icon="icons.key"
-              type="number"
-              outlined
-              color="primary"
-              required
-              :rules="onlyFourCharacters"
-              v-model="user.verifierCode"
-            /> -->
-
-            <!-- <v-text-field
+            <v-text-field
               label="Contraseña"
               name="password"
               :prepend-icon="icons.password"
@@ -95,7 +83,7 @@
               :type="showConfirmPassword ? 'text' : 'password'"
               :append-icon="showConfirmPassword ? icons.eyeOn : icons.eyeOff"
               @click:append="showConfirmPassword = !showConfirmPassword"
-            /> -->
+            />
           </v-form>
 
           <ProgressLinear v-bind:loading="registerLoading" color="primary" />
@@ -157,6 +145,7 @@ export default {
       email: '',
       password: '',
       confirmPassword: '',
+      foto_perfil: '',
     },
     icons: icons,
     passwordRules: [rules.empty, rules.minimumEight],
@@ -177,7 +166,8 @@ export default {
     async register() {
       this.registerLoading = true
       try {
-        let response = await axios.post(URL + 'api/user/register', this.user)
+        let response = await axios.post(URL + '/api/registeruser', this.user)
+        //alert(JSON.stringify(response.data) )
         if (response.data.status === 'c8usu0') {
           this.$store.dispatch('user/setUpRegisterSuccessMsg')
           this.$router.push('/login')
@@ -189,6 +179,7 @@ export default {
           this.setAlert(this.icons.warning, errors, 'orange')
         }
       } catch (error) {
+        //alert(JSON.stringify(error) )
         if (error.response.status === 404) {
           this.setAlert(this.icons.warning, errorUser.reg404, 'orange')
         } else if (error.response.status === 500) {

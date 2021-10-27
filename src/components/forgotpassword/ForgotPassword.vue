@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center">
     <v-col cols="12" xs="12" sm="6" md="4" lg="3">
-      <CardTransparent :title="loginText.title" :subtitle="loginText.subtitle">
+      <CardTransparent :title="forgotPassText.title" :subtitle="forgotPassText.subtitle">
         <v-card-text>
           <v-img
             :src="require(`../../assets/boxnews.gif`)"
@@ -21,7 +21,7 @@
             <v-text-field
               label="Correo "
               v-model="user.email"
-              name="login"
+              name="email"
               :prepend-icon="icons.person"
               type="email"
               outlined
@@ -29,24 +29,10 @@
               required
               :rules="emailRules"
             />
-
-            <v-text-field
-              label="Contraseña"
-              v-model="user.password"
-              color="primary"
-              name="password"
-              outlined
-              required
-              :rules="passwordRules"
-              :prepend-icon="icons.password"
-              :type="showPassword ? 'text' : 'password'"
-              :append-icon="showPassword ? icons.eyeOn : icons.eyeOff"
-              @click:append="showPassword = !showPassword"
-              @keyup.enter="valid ? login() : false"
-            />
+            
           </v-form>
 
-          <ProgressLinear v-bind:loading="loginLoading" color="primary" />
+          <ProgressLinear v-bind:loading="forgotPassLoading" color="primary" />
         </v-card-text>
 
         <v-card-actions>
@@ -57,9 +43,9 @@
             }"
             block
             type="submit"
-            @click="login"
+            @click="resetpassword"
             :disabled="!valid"
-            >Iniciar sesion
+            >Recuperar contraseña
           </v-btn>
         </v-card-actions>
         <v-divider />
@@ -68,12 +54,12 @@
           <v-col cols="12" sm="6" md="6">
             <v-btn
               text
-              to="forgotpassword"
+              to="login"
               color="white"
               block
               :x-small="$vuetify.breakpoint.mobile"
             >
-              ¿Olvidaste tu contraseña?
+              ¿Con cuenta? Iniciar sesión
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -97,14 +83,14 @@ import { rules } from '../../utils/components/rules'
 import { mapState } from 'vuex'
 import { icons } from '../../data/icons'
 import axios from 'axios'
-import router from '../../router/index'
+//import router from '../../router/index'
 import { URL } from '../../data/url'
 import { errorUser } from '../../data/errors'
-import { loginText } from '../../data/viewText'
+import { forgotPasswordText } from '../../data/viewText'
 import { mixinAlert } from '../../mixins/mixins.js'
 
 export default {
-  name: 'Login',
+  name: 'ForgotPass',
   components: {
     CardTransparent: () => import('../cardDark/CardTransparent'),
     Alert: () => import('../alert/Alert'),
@@ -113,52 +99,41 @@ export default {
   },
   mixins: [mixinAlert],
   data: () => ({
-    loginLoading: false,
+    forgotPassLoading: false,
     valid: true,
-    showPassword: false,
-    passwordRules: [rules.minimumEight],
     emailRules: [rules.empty, rules.email],
     icons: icons,
-    loginText: loginText,
+    forgotPassText: forgotPasswordText,
     user: {
       email: '',
-      password: '',
     },
   }),
   computed: {
     ...mapState('user', ['registerSuccessMsg']),
   },
   methods: {
-    async login() {
-      this.loginLoading = true
+    async resetpassword() {
+      this.forgotPassLoading = true
       try {
-<<<<<<< Updated upstream
-        let response = await axios.post(URL + 'api/user/login', this.user)
-        if (response.data.access_token) {
-          localStorage.setItem('QpKWqBXI', response.data.access_token)
-          localStorage.setItem('type_user', response.data.user.type)
-=======
-        let response = await axios.post(URL + '/api/login', this.user)
+        let response = await axios.post(URL + '/api/forgot-password', this.user)
         //alert(JSON.stringify(response.data))
         if (response.data.token) {
-          localStorage.setItem('QpKWqBXI', response.data.token)
-          localStorage.setItem('type_user', response.data.type)
->>>>>>> Stashed changes
-          router.push('/dashboard')
+          //localStorage.setItem('QpKWqBXI', response.data.status)
+          this.setAlert(this.icons.email, response.data.message, 'success')
         } else {
-          this.setAlert(this.icons.warning, response.data.message, 'warning')
+          this.setAlert(this.icons.email, response.data.message, 'success')
         }
       } catch (error) {
         //alert(JSON.stringify('error'))
         if (error.response.status === 404) {
-          this.setAlert(this.icons.warning, errorUser.login404, 'error')
+          this.setAlert(this.icons.warning, errorUser.reset404, 'error')
         } else if (error.response.status === 500) {
-          this.setAlert(this.icons.warning, errorUser.login500, 'error')
+          this.setAlert(this.icons.warning, errorUser.reset500, 'error')
         } else {
-          this.setAlert(this.icons.warning, errorUser.loginUn, 'error')
+          this.setAlert(this.icons.warning, errorUser.resetUn, 'error')
         }
       } finally {
-        this.loginLoading = false
+        this.forgotPassLoading = false
       }
     },
   },
