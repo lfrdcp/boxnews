@@ -10,7 +10,7 @@
 import { icons } from '../data/icons';
 
 export default {
-  name: 'PageLogin',
+  name: 'PageLoginlogin',
   components: {
     Login: () => import('../components/login/Login')
   },
