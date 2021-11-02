@@ -19,6 +19,10 @@ export const errorUser = {
   login404: msg404 + '(Iniciar sesión)',
   loginUn: msgUn + '(Iniciar sesión)',
 
+  reset500: msg500 + '(Recuperar contraseña)',
+  reset404: msg404 + '(Recuperar contraseña)',
+  resetUn: msgUn + '(Recuperar contraseña)',
+
   reg500: msg500 + '(Registarse)',
   reg404: msg404 + '(Registarse)',
   regUn: msgUn + '(Registarse)',
