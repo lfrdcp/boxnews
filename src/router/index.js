@@ -11,6 +11,8 @@ import dashboard from './modules/dashboard';
 import task from './modules/task';
 import profile from './modules/profile';
 import storeEmployee from './modules/storeEmployee';
+import publication from './modules/publication';
+import user from './modules/user';
 
 const routes = [
   //TODAS LAS RUTAS QUE NO NECESITEN INICIAR SESION
@@ -19,7 +21,7 @@ const routes = [
   {
     path: '/pagecontent',
     component: PageInicio,
-    children: [...dashboard, ...task, ...profile, ...storeEmployee],
+    children: [...dashboard, ...task, ...profile, ...storeEmployee, ...publication, ...user],
   },
 ];
 
